@@ -6,7 +6,7 @@ class Bat < ActiveRecord::Base
     Bat.find_by(mlb_player_id: id)
   end
   
-  def self.refresh_stats!
+  def self.fetch_stat_csv!
     agent = Mechanize.new
     page = agent.get( 'http://www.fangraphs.com/projections.aspx?pos=all&stats=bat&type=uzips')
 
@@ -14,23 +14,26 @@ class Bat < ActiveRecord::Base
     form.add_field!('__EVENTARGUMENT','')
     form.add_field!('__EVENTTARGET','ProjectionBoard1$cmdCSV')
     page = agent.submit(form)
-
-    Bat.build_from_csv(page.save)
+    
+    page.save
   end
-                   
-  def self.build_from_csv(csv_file)
+  
+  def self.refresh_stats!
+    stats = Bat.fetch_stat_csv!
+
     File.readlines(csv_file).each_with_index do |stat_line, index|
       next if index == 0
 
       stats = stat_line.chomp.gsub('"','').split(',')
+      
+      mlb_player_id = stats.pop.to_i       
+      player = Bat.find_or_create(mlb_player_id)
 
-      Bat.build_or_refresh!(stats)
+      BatStatline.add_stats_for!(player, stats.drop(2))
     end
   end
 
-  def self.build_or_refresh!(stats)
-    mlb_player_id = stats.pop.to_i
-  
+  def self.find_or_create!(id)
     player = Bat.find_by_mlb_id(mlb_player_id) 
     
     if player.nil?
@@ -38,10 +41,6 @@ class Bat < ActiveRecord::Base
                            team: stats[1],
                            mlb_player_id: mlb_player_id)
     end
-    
-    p player
-    
-    BatStatline.add_stats_for!(player, stats.drop(2))
   end
 
   def team=(value)
@@ -54,8 +53,14 @@ class Bat < ActiveRecord::Base
       self.team_name = 'Free Agent'
     end
   end
+  
+  def current_statline
+    self.statlines.last
+  end
 
-    
+  def method_missing(name)
+    self.current_statline.send(name)
+  end   
 end
 
 

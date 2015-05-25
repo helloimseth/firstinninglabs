@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150525205158) do
+ActiveRecord::Schema.define(version: 20150525220415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,41 @@ ActiveRecord::Schema.define(version: 20150525205158) do
 
   add_index "bats", ["mlb_player_id"], name: "index_bats_on_mlb_player_id", using: :btree
   add_index "bats", ["name", "team_name"], name: "index_bats_on_name_and_team_name", using: :btree
+
+  create_table "pit_statlines", force: :cascade do |t|
+    t.integer  "pit_id",     null: false
+    t.integer  "W"
+    t.integer  "L"
+    t.float    "ERA"
+    t.integer  "GS"
+    t.integer  "G"
+    t.float    "IP"
+    t.integer  "H"
+    t.integer  "ER"
+    t.integer  "HR"
+    t.integer  "SO"
+    t.integer  "BB"
+    t.float    "WHIP"
+    t.float    "K/9"
+    t.float    "BB/9"
+    t.float    "FIP"
+    t.float    "WAR"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "pits", force: :cascade do |t|
+    t.string   "name",          null: false
+    t.string   "team_name",     null: false
+    t.integer  "mlb_player_id"
+    t.boolean  "reliever"
+    t.integer  "team_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "pits", ["mlb_player_id"], name: "index_pits_on_mlb_player_id", using: :btree
+  add_index "pits", ["name", "team_name"], name: "index_pits_on_name_and_team_name", using: :btree
 
   create_table "teams", force: :cascade do |t|
     t.string   "name",       null: false
