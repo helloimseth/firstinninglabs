@@ -58,22 +58,22 @@ ActiveRecord::Schema.define(version: 20150525220415) do
 
   create_table "pit_statlines", force: :cascade do |t|
     t.integer  "pit_id",     null: false
-    t.integer  "W"
-    t.integer  "L"
-    t.float    "ERA"
-    t.integer  "GS"
-    t.integer  "G"
-    t.float    "IP"
-    t.integer  "H"
-    t.integer  "ER"
-    t.integer  "HR"
-    t.integer  "SO"
-    t.integer  "BB"
-    t.float    "WHIP"
-    t.float    "K/9"
-    t.float    "BB/9"
-    t.float    "FIP"
-    t.float    "WAR"
+    t.integer  "w"
+    t.integer  "l"
+    t.float    "era"
+    t.integer  "gs"
+    t.integer  "g"
+    t.float    "ip"
+    t.integer  "h"
+    t.integer  "er"
+    t.integer  "hr"
+    t.integer  "so"
+    t.integer  "bb"
+    t.float    "whip"
+    t.float    "k_per_9"
+    t.float    "bb_per_9"
+    t.float    "fip"
+    t.float    "war"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
