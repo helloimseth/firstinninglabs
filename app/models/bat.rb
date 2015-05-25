@@ -21,25 +21,16 @@ class Bat < ActiveRecord::Base
   def self.refresh_stats!
     stats = Bat.fetch_stat_csv!
 
-    File.readlines(csv_file).each_with_index do |stat_line, index|
+    File.readlines(stats).each_with_index do |stat_line, index|
       next if index == 0
 
       stats = stat_line.chomp.gsub('"','').split(',')
       
       mlb_player_id = stats.pop.to_i       
-      player = Bat.find_or_create(mlb_player_id)
+      player = Bat.find_by_mlb_id(mlb_player_id) ||
+               Bat.create!(name: stats[0], team: stats[1], mlb_player_id: mlb_player_id)
 
       BatStatline.add_stats_for!(player, stats.drop(2))
-    end
-  end
-
-  def self.find_or_create!(id)
-    player = Bat.find_by_mlb_id(mlb_player_id) 
-    
-    if player.nil?
-      player = Bat.create!(name: stats[0],
-                           team: stats[1],
-                           mlb_player_id: mlb_player_id)
     end
   end
 
