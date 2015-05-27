@@ -1,0 +1,61 @@
+<% statnames = BatStatline.columns.map(&:name).rotate(-2).drop(4) %>
+
+<h1> <%= @team.name %> </h1>
+<h4>updated on <%= @team.bats.first.created_at %> </h4>
+
+
+<h3> Bats </h3>
+<table>
+  <thead>
+    <th>
+      name
+    </th>
+    <% statnames.each do |statname| %>
+      <th>
+        <%= statname %>
+      </th>
+    <% end %>
+  </thead>
+  <% @team.bats.each do |bat| %>
+  <tr>
+    <td>
+      <%= bat.name %>
+    </td>
+    <% statnames.map(&:to_sym).each do |stat| %>
+      <td>
+        <%= bat.send(stat) %>
+      </td>
+    <% end %>
+  </tr>
+  <% end %>
+</table>
+
+<% statnames = PitStatline.columns.map(&:name).rotate(-3).drop(5) %>
+
+<% [:current_zips, :current_steamer].each do |projection| %>
+  <h3>Pitchers (<%= projection.to_s[8..-1] %>)</h3>
+  <table>
+    <thead>
+      <th>
+        name
+      </th>
+      <% statnames.each do |statname| %>
+        <th>
+          <%= statname %>
+        </th>
+      <% end %>
+    </thead>
+    <% @team.pits.each do |pit| %>
+    <tr>
+      <td>
+        <%= pit.name  %>
+      </td>
+      <% statnames.map(&:to_sym).each do |stat| %>
+        <td>
+          <%= pit.send(projection).send(stat) unless pit.send(projection).nil? %>
+        </td>
+      <% end %>
+    </tr>
+    <% end %>
+  </table>
+<% end %>

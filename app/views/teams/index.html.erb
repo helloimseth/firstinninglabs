@@ -1,0 +1,5 @@
+<ul>
+  <% @teams.each do |team| %>
+    <li><a href="<%= team_url(team)%>"><%= team.name %></a></li>
+  <% end %>
+</ul>

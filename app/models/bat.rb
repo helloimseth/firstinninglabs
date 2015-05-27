@@ -15,13 +15,13 @@ class Bat < ActiveRecord::Base
     form.add_field!('__EVENTTARGET','ProjectionBoard1$cmdCSV')
     page = agent.submit(form)
     
-    page.save
+    page.body
   end
   
   def self.refresh_stats!
-    stats = Bat.fetch_stat_csv!
+    stats = Bat.fetch_stat_csv!.split("\n")
 
-    File.readlines(stats).each_with_index do |stat_line, index|
+    stats.each_with_index do |stat_line, index|
       next if index == 0
 
       stats = stat_line.chomp.gsub('"','').split(',')
