@@ -5,7 +5,6 @@
 
 
 <h3> Statline Snapshots </h3>
-<% @bat.statlines.each do |statline| %>
   <table>
     <thead>
       <th>
@@ -17,6 +16,8 @@
         </th>
       <% end %>
     </thead>
+    <% @bat.statlines.each do |statline| %>
+
     <tr>
       <td>
         <%= statline.send(statnames[0].to_sym).to_date %>
@@ -28,5 +29,6 @@
         </td>
       <% end %>
     </tr>
+    <% end %>
+    
   </table>
-<% end %>

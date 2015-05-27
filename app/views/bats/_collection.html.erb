@@ -1,6 +1,10 @@
 <table>
   <thead>
+    <th>
+      name
+    </th>
     <% statnames.each do |statname| %>
+    
       <th>
         <%= statname %>
       </th>
@@ -12,7 +16,7 @@
   <tr>
     <td>
       <a href='/<%=model.class.name.downcase%>s/<%= model.id %>'>
-        <%= model.send(statnames[0]) %>
+        <%= model.name %>
       </a>
     </td>
     <% statnames.each do |stat| %>
