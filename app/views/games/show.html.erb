@@ -1,0 +1,61 @@
+<% statnames = Competitor.columns.map(&:name).rotate(-2).drop(4) %>
+<h1> Game on <%= @game.date %></h1>
+
+<h3>Favorite</h3>
+<a href=" <%=  edit_competitor_url(@favorite) %>">Edit</a>
+
+  <table>
+      <th>
+        Team Name
+      </th>
+      <% statnames.each do |statname| %>
+        <th>
+            <%= statname %>
+        </th>
+      <% end %>
+      <th>
+          team expected win %
+      </th>
+    <tr>
+      <td>
+        <%= @favorite.team.name %>
+      </td>
+      <% statnames.map(&:to_sym).each do |statname| %>
+        <td>
+            <%= @favorite.send(statname) %>
+        </td>
+      <% end %>
+      <td>
+        <%= @favorite.team_expected_win_percentage %>
+      </td>
+    </tr>
+  </table>
+
+<h3>Underdog</h3>
+<a href=" <%= edit_competitor_url(@underdog) %>">Edit</a>
+<table>
+    <th>
+      Team Name
+    </th>
+    <% statnames.each do |statname| %>
+      <th>
+          <%= statname %>
+      </th>
+    <% end %>
+    <th>
+        team expected win %
+    </th>
+  <tr>
+    <td>
+      <%= @underdog.team.name %>
+    </td>
+    <% statnames.map(&:to_sym).each do |statname| %>
+      <td>
+          <%= @underdog.send(statname) %>
+      </td>
+    <% end %>
+    <td>
+      <%= @underdog.team_expected_win_percentage %>
+    </td>
+  </tr>
+</table>
