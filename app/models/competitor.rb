@@ -27,22 +27,22 @@ class Competitor < ActiveRecord::Base
 
   def team_expected_win_percentage
     if self.off_expected_war && self.sp_expected_war && self.rp_expected_war
-      (self.off_expected_war +
+      ((self.off_expected_war +
        self.sp_expected_war +
-       self.rp_expected_war + 49.9) / 162
+       self.rp_expected_war + 49.9) / 162).round(3)
      end
   end
 
   def starter=(id)
     self.sp = id
 
-    self.sp_expected_war = Pit.find(id).expected_war_as_sp
+    self.sp_expected_war = Pit.find(id).expected_war_as_sp.round(3)
   end
 
   def relievers=(arr)
     self.rps = arr.map(&:to_i)
 
-    self.rp_expected_war = arr.map {|rp| Pit.find(rp).expected_war_as_rp}.inject(:+)
+    self.rp_expected_war = arr.map {|rp| Pit.find(rp).expected_war_as_rp}.inject(:+).round(3)
   end
 
   def relievers
@@ -52,11 +52,13 @@ class Competitor < ActiveRecord::Base
   def batting_order=(arr)
     self.lineup= arr
 
-    self.off_expected_war = arr.map.with_index do |bat_id, idx|
+     war_sum = arr.map.with_index do |bat_id, idx|
       batter = Bat.find(bat_id.to_i)
 
       BATTING_ORDER_XPA[idx.to_i + 1] * batter.war_per_pa
     end.inject(:+)
+
+    self.off_expected_war = war_sum.round(3)
   end
 
 end

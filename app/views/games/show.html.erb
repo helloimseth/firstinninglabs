@@ -1,61 +1,57 @@
-<% statnames = Competitor.columns.map(&:name).rotate(-2).drop(4) %>
+<% statnames = Competitor.columns.map(&:name).drop(2).take(3) %>
 <h1> Game on <%= @game.date %></h1>
 <h3>Sportsbook Odds: <%= @game.sportsbook_odds %></h3>
-<h3>Favorite <a href=" <%=  edit_competitor_url(@favorite) %>">Edit</a></h3>
 
 
-  <table>
-      <th>
-        Team Name
-      </th>
-      <% statnames.each do |statname| %>
+<% [:favorite, :underdog].each do |competitor| %>
+<h3> <%= competitor.to_s %> <a href=" <%=  edit_competitor_url(@game.send(competitor)) %>">Edit</a></h3>
+  <% team = @game.send(competitor) %>
+    <table>
         <th>
-            <%= statname %>
+          Team Name
         </th>
-      <% end %>
-      <th>
-          team expected win %
-      </th>
-    <tr>
-      <td>
-        <%= @favorite.team.name %>
-      </td>
-      <% statnames.map(&:to_sym).each do |statname| %>
+        <% statnames.each do |statname| %>
+          <th>
+              <%= statname %>
+          </th>
+        <% end %>
+        <th>
+            team expected win %
+        </th>
+      <tr>
         <td>
-            <%= @favorite.send(statname) %>
+          <%= team.team.name %>
         </td>
+        <% statnames.map(&:to_sym).each do |statname| %>
+          <td>
+              <%= team.send(statname) %>
+          </td>
+        <% end %>
+        <td>
+          <%= team.team_expected_win_percentage %>
+        </td>
+      </tr>
+    </table>
+
+    <h4>
+      Starter
+    </h4>
+      <a href="#"> <%= team.starter.name %></a>
+
+    <h4>Relievers</h4>
+    <ul>
+      <% team.rps.each do |rp| %>
+        <li> <a href="#"> <%= Pit.find(rp).name %></a></li>
       <% end %>
-      <td>
-        <%= @favorite.team_expected_win_percentage %>
-      </td>
-    </tr>
-  </table>
+    </ul>
 
-<h3>Underdog <a href=" <%= edit_competitor_url(@underdog) %>">Edit</a></h3>
+    <h4>Batting Order</h4>
+    <ul>
+      <% team.lineup.each do |bat| %>
+        <li> <a href="<%= bat_url(bat) %>">
+          <%= Bat.find(bat).name %>
+        </a> </li>
+      <% end %>
+    </ul>
 
-<table>
-    <th>
-      Team Name
-    </th>
-    <% statnames.each do |statname| %>
-      <th>
-          <%= statname %>
-      </th>
-    <% end %>
-    <th>
-        team expected win %
-    </th>
-  <tr>
-    <td>
-      <%= @underdog.team.name %>
-    </td>
-    <% statnames.map(&:to_sym).each do |statname| %>
-      <td>
-          <%= @underdog.send(statname) %>
-      </td>
-    <% end %>
-    <td>
-      <%= @underdog.team_expected_win_percentage %>
-    </td>
-  </tr>
-</table>
+<% end %>
