@@ -1,0 +1,25 @@
+<table>
+  <thead>
+    <% statnames.each do |statname| %>
+      <th>
+        <%= statname %>
+      </th>
+    <% end %>
+  </thead>
+
+  <% statnames = statnames.map(&:to_sym) %>
+  <% collection.each do |model| %>
+  <tr>
+    <td>
+      <a href='/<%=model.class.name.downcase%>s/<%= model.id %>'>
+        <%= model.send(statnames[0]) %>
+      </a>
+    </td>
+    <% statnames.each do |stat| %>
+      <td>
+        <%= model.send(stat) %>
+      </td>
+    <% end %>
+  </tr>
+  <% end %>
+</table>

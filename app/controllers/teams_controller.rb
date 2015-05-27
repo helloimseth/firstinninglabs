@@ -1,5 +1,5 @@
 class TeamsController < ApplicationController
-  before_action :check_stats
+  before_action :refresh_stats!
 
   def index
     @teams = Team.all
@@ -10,14 +10,4 @@ class TeamsController < ApplicationController
                 .includes(pits: :statlines)
                 .find(params[:id])
   end
-
-  private
-    def check_stats
-      if PitStatline.last.nil? || BatStatline.last.nil? ||
-         PitStatline.last.created_at < Date.yesterday ||
-         BatStatline.last.created_at < Date.yesterday
-         Pit.refresh_stats!
-         Bat.refresh_stats!
-       end
-    end
 end

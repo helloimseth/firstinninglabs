@@ -1,0 +1,32 @@
+<% statnames = BatStatline.columns.map(&:name).rotate(-2).drop(1) %>
+
+<h1> <%= @bat.name %> </h1>
+<h4>updated on <%= @bat.created_at %> </h4>
+
+
+<h3> Statline Snapshots </h3>
+<% @bat.statlines.each do |statline| %>
+  <table>
+    <thead>
+      <th>
+        Date
+      </th>
+      <% statnames.drop(3).each do |statname| %>
+        <th>
+          <%= statname %>
+        </th>
+      <% end %>
+    </thead>
+    <tr>
+      <td>
+        <%= statline.send(statnames[0].to_sym).to_date %>
+
+      </td>
+      <% statnames.drop(3).map(&:to_sym).each do |stat| %>
+        <td>
+          <%= statline.send(stat) %>
+        </td>
+      <% end %>
+    </tr>
+  </table>
+<% end %>

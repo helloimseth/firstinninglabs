@@ -4,30 +4,8 @@
 <h4>updated on <%= @team.bats.first.created_at %> </h4>
 
 
-<h3> Bats </h3>
-<table>
-  <thead>
-    <th>
-      name
-    </th>
-    <% statnames.each do |statname| %>
-      <th>
-        <%= statname %>
-      </th>
-    <% end %>
-  </thead>
-  <% @team.bats.each do |bat| %>
-  <tr>
-    <td>
-      <%= bat.name %>
-    </td>
-    <% statnames.map(&:to_sym).each do |stat| %>
-      <td>
-        <%= bat.send(stat) %>
-      </td>
-    <% end %>
-  </tr>
-  <% end %>
+<h3> Hitters </h3>
+  <%= render "bats/collection", statnames: statnames, collection: @team.bats %>
 </table>
 
 <% statnames = PitStatline.columns.map(&:name).rotate(-3).drop(5) %>
