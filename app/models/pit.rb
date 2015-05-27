@@ -3,6 +3,7 @@ class Pit < ActiveRecord::Base
   has_many :statlines, class_name: "PitStatline",
                        foreign_key: "pit_id", inverse_of: :pit,
                        dependent: :destroy
+  has_many :starts, class_name: "Competitor", foreign_key: "sp", inverse_of: :starter
 
   CSV_TAGS = ["uzips", "steameru"]
 
@@ -70,8 +71,27 @@ class Pit < ActiveRecord::Base
   def expected_war_as_sp
     zips = self.current_zips
     steamer = self.current_steamer
-    
-    ((zips.war/zips.gs) + (steamer.war/steamer.gs))/2
+    total_war_over_gs = 0
+    counter = 0
+
+    [zips, steamer].each do |projection|
+      unless projection.nil?
+        total_war_over_gs += (projection.war/projection.gs)
+        counter += 1
+      end
+    end
+
+    total_war_over_gs/counter
   end
 
+  def expected_war_as_rp
+    steamer = self.current_steamer
+    return steamer.war/steamer.g if steamer
+
+    self.current_zips.war/self.current_zips.g
+  end
+
+  def games_started
+    self.starts.map(&:game)
+  end
 end

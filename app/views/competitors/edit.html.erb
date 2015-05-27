@@ -1,0 +1,52 @@
+<% role = @competitor.game_as_favorite.nil? ? "Underdog" : "Favorite"  %>
+
+<form action="<%= competitor_url(@competitor) %>" method="post">
+  <%= auth_token %>
+
+  <input type="hidden" name="_method" value="put">
+  <h1> <%= @team.name %> </h1>
+  <h2>
+    <%= role %>
+      to
+    <%= @competitor.game.send(role.downcase.to_sym).team.name %>
+      on
+    <%= @competitor.game.date %>
+  </h2>
+
+  <h3>Starting Pitcher</h3>
+  <select class="" name="competitor[starter]">
+    <% @team.pits.each do |pit| %>
+      <option value="<%= pit.id %>"
+        <%= "selected" if pit.id == @competitor.sp %>>
+        <%= pit.name %>
+      </option>
+    <% end %>
+  </select>
+  <label for="">Manual Input (option)
+    <input type="text" name="sp_overwrite" value="">
+  </label>
+
+  <h3>Relief Pitchers</h3>
+  <% @team.pits.each do |pit| %>
+  <label> <%= pit.name %>
+    <input type="checkbox"
+           name="competitor[relievers][]"
+           value="<%= pit.id %>">
+         </label><br>
+  <% end %>
+
+  <h3>Lineup</h3>
+  <% 9.times do |num| %>
+    <h4> <%= num + 1 %> </h4>
+    <select class="" name="competitor[batting_order][]">
+      <% @team.bats.each do |bat| %>
+        <option value="<%= bat.id %>">
+          <%= bat.name %>
+        </option>
+      <% end %>
+    </select>
+  <% end %>
+
+  <input type="submit" value="Submit">
+
+</form>
