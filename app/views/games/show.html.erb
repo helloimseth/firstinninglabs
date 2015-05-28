@@ -36,21 +36,30 @@
     <h4>
       Starter
     </h4>
-      <a href="#"> <%= team.starter.name %></a>
+      <a href="#"> <%= team.starter.name unless team.starter.nil? %></a>
 
     <h4>Relievers</h4>
     <ul>
+      <% unless team.rps.nil? %>
       <% team.rps.each do |rp| %>
         <li> <a href="#"> <%= Pit.find(rp).name %></a></li>
+      <% end %>
       <% end %>
     </ul>
 
     <h4>Batting Order</h4>
     <ul>
-      <% team.lineup.each do |bat| %>
-        <li> <a href="<%= bat_url(bat) %>">
-          <%= Bat.find(bat).name %>
-        </a> </li>
+      <% unless team.lineup.nil? %>
+        <% team.lineup.each do |bat| %>
+          <% if bat != 0 %>
+            <li> <a href="<%= bat_url(bat) %>">
+              <%= Bat.find(bat).name %>
+            </a> </li>
+          <% else %>
+            <li>Pitcher</li>
+          <% end %>
+        <% end %>
+
       <% end %>
     </ul>
 

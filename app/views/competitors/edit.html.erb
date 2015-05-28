@@ -31,7 +31,8 @@
   <label> <%= pit.name %>
     <input type="checkbox"
            name="competitor[relievers][]"
-           value="<%= pit.id %>">
+           value="<%= pit.id %>"
+           <%= "checked" if @competitor.rps.include?(pit.id) %> >
          </label><br>
   <% end %>
 
@@ -40,10 +41,17 @@
     <h4> <%= num + 1 %> </h4>
     <select class="" name="competitor[batting_order][]">
       <% @team.bats.each do |bat| %>
-        <option value="<%= bat.id %>">
-          <%= bat.name %>
+
+        <option value="<%= bat.id %>"
+          <%= "selected" if @competitor.lineup[num] == bat.id %>>
+          <%= "#{bat.name} - #{bat.id}" %>
         </option>
       <% end %>
+
+      <option value="pitcher"
+              <%= "selected" if @competitor.lineup[-1] == 0 && num == 8 %>>
+              Pitcher
+      </option>
     </select>
   <% end %>
 

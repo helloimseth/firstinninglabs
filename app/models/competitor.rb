@@ -20,7 +20,6 @@ class Competitor < ActiveRecord::Base
     9 => 3.814814815
   }
 
-
   def game
     self.game_as_favorite || self.game_as_underdog
   end
@@ -29,7 +28,7 @@ class Competitor < ActiveRecord::Base
     if self.off_expected_war && self.sp_expected_war && self.rp_expected_war
       ((self.off_expected_war +
        self.sp_expected_war +
-       self.rp_expected_war + 49.9) / 162).round(3)
+       self.rp_expected_war + 0.294)).round(3)
      end
   end
 
@@ -52,11 +51,15 @@ class Competitor < ActiveRecord::Base
   def batting_order=(arr)
     self.lineup= arr
 
-     war_sum = arr.map.with_index do |bat_id, idx|
-      batter = Bat.find(bat_id.to_i)
+    war_sum = 0
 
-      BATTING_ORDER_XPA[idx.to_i + 1] * batter.war_per_pa
-    end.inject(:+)
+    arr.each.with_index do |bat_id, idx|
+      if bat_id != "pitcher"
+        batter = Bat.find(bat_id.to_i)
+
+        war_sum += BATTING_ORDER_XPA[idx.to_i + 1] * batter.war_per_pa
+      end
+    end
 
     self.off_expected_war = war_sum.round(3)
   end
