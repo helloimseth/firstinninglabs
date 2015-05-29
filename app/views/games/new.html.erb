@@ -18,6 +18,12 @@
     </select>
   </label>
 
+  <label for="f_odds">Sporstbook Odds
+    <input type="text"
+           name="game[f_odds]"
+           value="<%= @game.f_odds %>">
+  </label>
+
   <label for="game-underdog_id">Underdog
     <select class="" name="underdog_id">
       <option value="">Select</option>
@@ -30,11 +36,13 @@
     </select>
   </label>
 
-  <label for="game-sportsbook_odds">Sporstbook Odds
+  <label for="d_odds">Sporstbook Odds
     <input type="text"
-           name="game[sportsbook_odds]"
-           value="<%= @game.sportsbook_odds %>">
+           name="game[d_odds]"
+           value="<%= @game.d_odds %>">
   </label>
+
+
 
   <input type="submit" name="name" value="Submit">
 </form>

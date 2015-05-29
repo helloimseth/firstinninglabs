@@ -20,4 +20,8 @@ class PitStatline < ActiveRecord::Base
 
     statline.save
   end
+
+  def name
+    self.pit.name
+  end
 end

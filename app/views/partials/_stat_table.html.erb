@@ -1,0 +1,42 @@
+<h3> Statline Snapshots </h3>
+  <table>
+    <thead>
+      <th>
+        <%= leader_stat.to_s %>
+      </th>
+      <% statnames.each do |statname| %>
+        <th>
+          <%= statname %>
+        </th>
+      <% end %>
+
+      <th>
+        <%= ender_stat.to_s if ender_stat %>
+      </th>
+    </thead>
+
+    <% unless collection.is_a?(ActiveRecord::Associations::CollectionProxy) || collection.is_a?(Array) %>
+      <%= collection = [collection] %>
+    <% end %>
+
+    <% collection.each do |statline| %>
+      <tr>
+
+          <td>
+            <a href="/<%= statline.class.name.downcase %>s/<%= statline.id %>">
+              <% stat = statline.send(leader_stat) %>
+              <%= stat.is_a?(ActiveSupport::TimeWithZone) ? stat.to_date : stat %>
+            </a>
+          </td>
+        <% statnames.map(&:to_sym).each do |stat| %>
+          <td>
+            <%= statline.send(stat) %>
+          </td>
+        <% end %>
+
+        <td>
+          <%= statline.send(ender_stat) if ender_stat%>
+        </td>
+      </tr>
+    <% end %>
+</table>

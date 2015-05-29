@@ -64,4 +64,8 @@ class Competitor < ActiveRecord::Base
     self.off_expected_war = war_sum.round(3)
   end
 
+  def team_name
+    self.team.name
+  end
+
 end

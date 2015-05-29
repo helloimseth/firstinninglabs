@@ -5,35 +5,40 @@
 
 
 <h3> Hitters </h3>
-  <%= render "bats/collection", statnames: statnames, collection: @team.bats %>
-</table>
+<%= render partial: "partials/stat_table",
+           locals:{ statnames: statnames,
+                    collection: @team.bats,
+                    leader_stat: :name,
+                    ender_stat: false }  %>
+
 
 <% statnames = PitStatline.columns.map(&:name).rotate(-3).drop(5) %>
 
 <% [:current_zips, :current_steamer].each do |projection| %>
   <h3>Pitchers (<%= projection.to_s[8..-1] %>)</h3>
-  <table>
-    <thead>
-      <th>
-        name
-      </th>
-      <% statnames.each do |statname| %>
-        <th>
-          <%= statname %>
-        </th>
-      <% end %>
-    </thead>
-    <% @team.pits.each do |pit| %>
-    <tr>
-      <td>
-        <%= pit.name  %>
-      </td>
-      <% statnames.map(&:to_sym).each do |stat| %>
-        <td>
-          <%= pit.send(projection).send(stat) unless pit.send(projection).nil? %>
-        </td>
-      <% end %>
-    </tr>
-    <% end %>
-  </table>
+
+                      <table>
+                        <thead>
+                          <th>
+                            name
+                          </th>
+                          <% statnames.each do |statname| %>
+                            <th>
+                              <%= statname %>
+                            </th>
+                          <% end %>
+                        </thead>
+                        <% @team.pits.each do |pit| %>
+                        <tr>
+                          <td>
+                            <%= pit.name  %>
+                          </td>
+                          <% statnames.map(&:to_sym).each do |stat| %>
+                            <td>
+                              <%= pit.send(projection).send(stat) unless pit.send(projection).nil? %>
+                            </td>
+                          <% end %>
+                        </tr>
+                        <% end %>
+                      </table>
 <% end %>

@@ -1,37 +1,19 @@
 <% statnames = Competitor.columns.map(&:name).drop(2).take(3) %>
-<h1> Game on <%= @game.log.date %></h1>
+<h1> Game <%= "on #{@game.log.date}" unless @game.log.nil?%></h1>
 
 
 <% [:favorite, :underdog].each do |competitor| %>
 <h3> <%= competitor.to_s.upcase %> <a href=" <%=  edit_competitor_url(@game.send(competitor)) %>">Edit</a></h3>
   <h4> Sportsbook odds: <%= competitor == :favorite ? @game.f_odds : @game.d_odds%> </h4>
   <% team = @game.send(competitor) %>
-    <table>
-        <th>
-          Team Name
-        </th>
-        <% statnames.each do |statname| %>
-          <th>
-              <%= statname %>
-          </th>
-        <% end %>
-        <th>
-            team expected win %
-        </th>
-      <tr>
-        <td>
-          <%= team.team.name %>
-        </td>
-        <% statnames.map(&:to_sym).each do |statname| %>
-          <td>
-              <%= team.send(statname) %>
-          </td>
-        <% end %>
-        <td>
-          <%= team.team_expected_win_percentage %>
-        </td>
-      </tr>
-    </table>
+
+  <%= render partial: "partials/stat_table",
+             locals:{ statnames: statnames,
+                      collection: team,
+                      leader_stat: :team_name,
+                      ender_stat: :team_expected_win_percentage }  %>
+
+
 
     <h4>
       Starter
