@@ -2,10 +2,8 @@
 
 <form action="<%= games_url %>" method="post">
   <%= auth_token %>
+  <input type="hidden" name="game[log_id]" value="<%= @log_id %>">
 
-  <label for="game-date">Date
-    <input type="date" name="game[date]" value="">
-  </label>
   <label for="game-favorite_id">Favorite
     <select class="" name="favorite_id">
       <option value="">Select</option>
@@ -18,7 +16,11 @@
     </select>
   </label>
 
-  <label for="f_odds">Sporstbook Odds
+  <label for="home-team">Home Team
+    <input type="checkbox" name="game[home_team]" value="favorite">
+  </label>
+
+  <label for="f_odds">Favorite Odds
     <input type="text"
            name="game[f_odds]"
            value="<%= @game.f_odds %>">
@@ -36,7 +38,11 @@
     </select>
   </label>
 
-  <label for="d_odds">Sporstbook Odds
+  <label for="home-team">Home Team
+    <input type="checkbox" name="game[home_team]" value="underdog">
+  </label>
+
+  <label for="d_odds">Underdog Odds
     <input type="text"
            name="game[d_odds]"
            value="<%= @game.d_odds %>">

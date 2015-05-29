@@ -1,0 +1,107 @@
+<% statnames = Log.columns.map(&:name).rotate(-2).drop(3) %>
+
+<h1> Day: <%= @log.day %> - <%= @log.date %> </h1>
+
+<%= render partial: "partials/stat_table",
+           locals:{ statnames: statnames,
+                    collection: @log,
+                    leader_stat: false,
+                    ender_stat: false }  %>
+
+<h2> Games </h2>
+<a href="<%= new_log_game_url(@log) %>">New</a>
+
+<table>
+  <thead>
+    <th>
+      Favorite
+    </th>
+    <th>
+      Odds
+    </th>
+    <th>
+      Implied Odds
+    </th>
+    <th>
+      Underdog
+    </th>
+    <th>
+      Odds
+    </th>
+    <th>
+      Implied Odds
+    </th>
+    <th>
+      Favorite %
+    </th>
+    <th>
+      Underdog %
+    </th>
+    <th>
+      Advantage
+    </th>
+    <th>
+      Pick
+    </th>
+    <th>
+      Team
+    </th>
+
+  </thead>
+
+  <% @log.games.each do |game| %>
+    <tr>
+      <% team = game.favorite %>
+      <td>
+        <a href="<%= team_url(team.team) %>">
+          <%= team.team_name %>
+
+        </a>
+      </td>
+
+      <td>
+        <%= game.f_odds %>
+      </td>
+
+      <td>
+        <%= game.f_implied_odds %>
+      </td>
+
+      <% team = game.underdog %>
+      <td>
+        <a href="<%= team_url(team.team) %>">
+          <%= team.team_name %>
+        </a>
+      </td>
+
+      <td>
+        <%= game.d_odds %>
+      </td>
+
+      <td>
+        <%= game.d_implied_odds %>
+      </td>
+
+      <td>
+        <%= game.adjusted_win_percentage(:favorite) %>
+      </td>
+
+      <td>
+        <%= game.adjusted_win_percentage(:underdog) %>
+      </td>
+
+      <td>
+        <%= game.advantage %>
+      </td>
+
+      <td>
+        <%= game.pick.to_s.capitalize %>
+      </td>
+
+      <td>
+        <%= game.pick == :none ? "None" : game.send(game.pick).team_name %>
+      </td>
+
+    </tr>
+  <% end %>
+</table>

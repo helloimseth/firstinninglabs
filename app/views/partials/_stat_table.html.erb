@@ -1,8 +1,7 @@
-<h3> Statline Snapshots </h3>
   <table>
     <thead>
       <th>
-        <%= leader_stat.to_s %>
+        <%= leader_stat.to_s if leader_stat %>
       </th>
       <% statnames.each do |statname| %>
         <th>
@@ -15,8 +14,10 @@
       </th>
     </thead>
 
-    <% unless collection.is_a?(ActiveRecord::Associations::CollectionProxy) || collection.is_a?(Array) %>
-      <%= collection = [collection] %>
+    <% unless collection.is_a?(ActiveRecord::Associations::CollectionProxy) ||
+              collection.is_a?(ActiveRecord::Relation) ||
+              collection.is_a?(Array) %>
+      <% collection = [collection] %>
     <% end %>
 
     <% collection.each do |statline| %>
@@ -24,8 +25,10 @@
 
           <td>
             <a href="/<%= statline.class.name.downcase %>s/<%= statline.id %>">
-              <% stat = statline.send(leader_stat) %>
-              <%= stat.is_a?(ActiveSupport::TimeWithZone) ? stat.to_date : stat %>
+              <% if leader_stat %>
+                <% stat = statline.send(leader_stat) %>
+                <%= stat.is_a?(ActiveSupport::TimeWithZone) ? stat.to_date : stat %>
+              <% end %>
             </a>
           </td>
         <% statnames.map(&:to_sym).each do |stat| %>

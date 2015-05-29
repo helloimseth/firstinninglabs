@@ -1,5 +1,6 @@
 <% statnames = Competitor.columns.map(&:name).drop(2).take(3) %>
-<h1> Game <%= "on #{@game.log.date}" unless @game.log.nil?%></h1>
+<h1> Game on
+  <a href="<%= log_url(@game.log) %> "> <%= @game.log.date unless @game.log.nil? %> </a></h1>
 
 
 <% [:favorite, :underdog].each do |competitor| %>

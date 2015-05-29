@@ -1,0 +1,9 @@
+<% statnames = Log.columns.map(&:name).rotate(-2).drop(3) %>
+
+<h1>Logs</h1>
+
+<%= render partial: "partials/stat_table",
+           locals:{ statnames: statnames,
+                    collection: @logs,
+                    leader_stat: :day,
+                    ender_stat: false }  %>

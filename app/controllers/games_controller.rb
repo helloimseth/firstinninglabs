@@ -4,6 +4,7 @@ class GamesController < ApplicationController
     @favorite = Competitor.new
     @underdog = Competitor.new
     @teams = Team.all
+    @log_id = params[:log_id]
   end
 
   def create
@@ -28,6 +29,6 @@ class GamesController < ApplicationController
   private
 
     def game_params
-      params.require(:game).permit(:date, :sportsbook_odds)
+      params.require(:game).permit(:log_id, :f_odds, :d_odds, :home_team)
     end
 end

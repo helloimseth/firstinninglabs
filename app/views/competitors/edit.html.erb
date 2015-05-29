@@ -10,7 +10,7 @@
       to
     <%= @competitor.game.send(role.downcase.to_sym).team.name %>
       on
-    <%= @competitor.game.date %>
+    <%= @competitor.game.log.date %>
   </h2>
 
   <h3>Starting Pitcher</h3>
@@ -32,7 +32,7 @@
     <input type="checkbox"
            name="competitor[relievers][]"
            value="<%= pit.id %>"
-           <%= "checked" if @competitor.rps.include?(pit.id) %> >
+           <%= "checked" if @competitor.rps && @competitor.rps.include?(pit.id) %> >
          </label><br>
   <% end %>
 
@@ -43,13 +43,13 @@
       <% @team.bats.each do |bat| %>
 
         <option value="<%= bat.id %>"
-          <%= "selected" if @competitor.lineup[num] == bat.id %>>
+          <%= "selected" if @competitor.lineup && @competitor.lineup[num] == bat.id %>>
           <%= "#{bat.name} - #{bat.id}" %>
         </option>
       <% end %>
 
       <option value="pitcher"
-              <%= "selected" if @competitor.lineup[-1] == 0 && num == 8 %>>
+              <%= "selected" if @competitor.lineup && @competitor.lineup[-1] == 0 && num == 8 %>>
               Pitcher
       </option>
     </select>
