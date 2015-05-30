@@ -62,4 +62,20 @@ class Game < ActiveRecord::Base
     self.log.kelly * factor
   end
 
+  def to_win
+    return 100/f_odds.abs * bet if pick == :favorite
+    d_odds/100 * bet
+  end
+
+  def expected_value
+    loser = self.pick == :favorite ? :underdog : :favorite
+
+    to_win * adjusted_win_percentage(self.pick) +
+    (bet * -1) * adjusted_win_percentage(loser)
+  end
+
+  def result
+    self.winner == self.pick ? to_win : bet * -1
+  end
+
 end

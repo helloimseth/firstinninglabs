@@ -52,6 +52,20 @@
     <th>
       Bet
     </th>
+    <th>
+      To Win
+    </th>
+    <th>
+      Expected Value
+    </th>
+
+    <th>
+      Winner
+    </th>
+
+    <th>
+      Result
+    </th>
 
   </thead>
 
@@ -114,6 +128,22 @@
 
       <td>
         <%= game.bet %>
+      </td>
+
+      <td>
+        <%= game.to_win %>
+      </td>
+
+      <td>
+        <%= game.expected_value %>
+      </td>
+
+      <td>
+        <%= game.send(game.winner).team_name unless game.winner.nil? %>
+      </td>
+
+      <td>
+        <%= game.result unless game.winner.nil? %>
       </td>
 
     </tr>
