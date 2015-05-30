@@ -46,6 +46,12 @@
     <th>
       Team
     </th>
+    <th>
+      Advantage
+    </th>
+    <th>
+      Bet
+    </th>
 
   </thead>
 
@@ -100,6 +106,14 @@
 
       <td>
         <%= game.pick == :none ? "None" : game.send(game.pick).team_name %>
+      </td>
+
+      <td>
+        <%= game.advantage %>
+      </td>
+
+      <td>
+        <%= game.bet %>
       </td>
 
     </tr>

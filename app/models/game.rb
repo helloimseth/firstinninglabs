@@ -50,4 +50,16 @@ class Game < ActiveRecord::Base
     advantage_for(:favorite) > 0 ? :favorite : :underdog
   end
 
+  def bet
+    return 0 if pick == :none
+
+    if pick == :favorite
+      factor = ((adjusted_win_percentage(:favorite)*((100/f_odds.abs) + 1) - 1)/(100/f_odds.abs)) * self.log.beginning_balance
+    else
+      factor = ((adjusted_win_percentage(:underdog) * ((d_odds/100) + 1) - 1)/(d_odds/100)) * self.log.beginning_balance
+    end
+
+    self.log.kelly * factor
+  end
+
 end
