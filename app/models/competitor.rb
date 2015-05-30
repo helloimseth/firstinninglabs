@@ -68,4 +68,5 @@ class Competitor < ActiveRecord::Base
     self.team.name
   end
 
+
 end

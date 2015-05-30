@@ -11,6 +11,11 @@ class Game < ActiveRecord::Base
     100.fdiv((self.d_odds.abs + 100)).round(3)
   end
 
+  def filled_out?
+    !self.send(:favorite).team_expected_win_percentage.nil? &&
+    !self.send(:underdog).team_expected_win_percentage.nil?
+  end
+
   def neutral_field_win_percentage(this_team, opponent)
     self.send(this_team).team_expected_win_percentage *
     (1 - self.send(opponent).team_expected_win_percentage)
@@ -45,7 +50,7 @@ class Game < ActiveRecord::Base
   end
 
   def pick
-    return :none if advantage <= 0.01
+    return :none if !self.filled_out? || advantage <= 0.01
 
     advantage_for(:favorite) > 0 ? :favorite : :underdog
   end
@@ -70,8 +75,8 @@ class Game < ActiveRecord::Base
   def expected_value
     loser = self.pick == :favorite ? :underdog : :favorite
 
-    to_win * adjusted_win_percentage(self.pick) +
-    (bet * -1) * adjusted_win_percentage(loser)
+    (to_win * adjusted_win_percentage(self.pick) +
+    (bet * -1) * adjusted_win_percentage(loser)).round(3)
   end
 
   def result

@@ -1,3 +1,4 @@
+<a href="<%= logs_url %>">Index</a>
 <% statnames = Log.columns.map(&:name).rotate(-2).drop(3) %>
 
 <h1> Day: <%= @log.day %> - <%= @log.date %> </h1>
@@ -13,6 +14,9 @@
 
 <table>
   <thead>
+    <th>
+
+    </th>
     <th>
       Favorite
     </th>
@@ -71,6 +75,9 @@
 
   <% @log.games.each do |game| %>
     <tr>
+      <td>
+        <a href="<%= game_url(game) %>">View</a>
+      </td>
       <% team = game.favorite %>
       <td>
         <a href="<%= team_url(team.team) %>">
@@ -103,19 +110,19 @@
       </td>
 
       <td>
-        <%= game.adjusted_win_percentage(:favorite) %>
+        <%= game.adjusted_win_percentage(:favorite) if game.filled_out? %>
       </td>
 
       <td>
-        <%= game.adjusted_win_percentage(:underdog) %>
+        <%= game.adjusted_win_percentage(:underdog) if game.filled_out?%>
       </td>
 
       <td>
-        <%= game.advantage %>
+        <%= game.advantage if game.filled_out? %>
       </td>
 
       <td>
-        <%= game.pick.to_s.capitalize %>
+        <%= game.pick.to_s.capitalize if game.filled_out?%>
       </td>
 
       <td>
@@ -123,19 +130,19 @@
       </td>
 
       <td>
-        <%= game.advantage %>
+        <%= game.advantage if game.filled_out?%>
       </td>
 
       <td>
-        <%= game.bet %>
+        <%= game.bet if game.filled_out?%>
       </td>
 
       <td>
-        <%= game.to_win %>
+        <%= game.to_win if game.filled_out?%>
       </td>
 
       <td>
-        <%= game.expected_value %>
+        <%= game.expected_value if game.filled_out? %>
       </td>
 
       <td>

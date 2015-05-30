@@ -8,11 +8,40 @@
   <h4> Sportsbook odds: <%= competitor == :favorite ? @game.f_odds : @game.d_odds%> </h4>
   <% team = @game.send(competitor) %>
 
-  <%= render partial: "partials/stat_table",
-             locals:{ statnames: statnames,
-                      collection: team,
-                      leader_stat: :team_name,
-                      ender_stat: :team_expected_win_percentage }  %>
+    <table>
+      <thead>
+        <th>
+          Name
+        </th>
+        <% statnames.each do |statname| %>
+          <th>
+            <%= statname %>
+          </th>
+        <% end %>
+
+        <th>
+          Expected Win %
+        </th>
+      </thead>
+
+        <tr>
+
+            <td>
+              <a href="<%= team_url(team.team) %>">
+                <%= team.team_name %>
+              </a>
+            </td>
+          <% statnames.map(&:to_sym).each do |stat| %>
+            <td>
+              <%= team.send(stat) %>
+            </td>
+          <% end %>
+
+          <td>
+            <%= team.team_expected_win_percentage %>
+          </td>
+        </tr>
+  </table>
 
 
 
@@ -47,3 +76,18 @@
     </ul>
 
 <% end %>
+
+<form action="<%= game_url(@game) %>" method="post">
+  <%= auth_token %>
+  <input type="hidden" name="_method" value="put">
+
+  <h1>Winner</h1>
+  <label for="game-winner"> <%= @game.favorite.team_name %>
+  <input type="radio" name="game[winner]" value="favorite"
+  <%= "checked" if @game.winner == 'favorite' %> ></label>
+  <label for="game-winner"> <%= @game.underdog.team_name %>
+  <input type="radio" name="game[winner]" value="underdog"
+  <%= "checked" if @game.winner == 'underdog' %> ></label>
+
+  <input type="submit" name="name" value="Save">
+</form>

@@ -26,9 +26,19 @@ class GamesController < ApplicationController
     @underdog = @game.underdog
   end
 
+  def update
+    @game = Game.find(params[:id])
+
+    if @game.update(game_params)
+      redirect_to game_url(@game)
+    else
+      render :show
+    end
+  end
+
   private
 
     def game_params
-      params.require(:game).permit(:log_id, :f_odds, :d_odds, :home_team)
+      params.require(:game).permit(:log_id, :f_odds, :d_odds, :home_team, :winner)
     end
 end
