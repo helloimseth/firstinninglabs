@@ -1,0 +1,54 @@
+
+<% statnames = PitStatline.columns.map(&:name).rotate(-3).drop(5) %>
+
+<a href="<%= logs_url %>">Logs Index</a>
+
+<h1> <%= @pit.name %> - <%= @pit.team.name %></h1>
+<h4>updated on <%= @pit.updated_at %> </h4>
+
+<form action="<%= pit_url(@pit) %>" method="post">
+  <%= auth_token %>
+  <input type="hidden" name="_method" value="put">
+
+  <label for="pit-team_id">Change Team
+    <select class="" name="pit[team_id]">
+      <option value="">Select</option>
+      <% @teams.each do |team| %>
+        <option value="<%= team.id %>">
+            <%= team.name %>
+          </option>
+      <% end %>
+    </select>
+  </label>
+
+  <input type="submit" value="Save">
+</form>
+
+<% [:zips, :steamers].each do |projection| %>
+  <h3><%= projection.to_s.capitalize %></h3>
+
+    <table>
+      <thead>
+        <th>
+          Date
+        </th>
+        <% statnames.each do |statname| %>
+          <th>
+            <%= statname %>
+          </th>
+        <% end %>
+      </thead>
+      <% @pit.send(projection).each do |statline| %>
+      <tr>
+        <td>
+          <%= statline.created_at.to_date %>
+        </td>
+        <% statnames.map(&:to_sym).each do |stat| %>
+          <td>
+            <%= statline.send(stat) %>
+          </td>
+        <% end %>
+      </tr>
+      <% end %>
+    </table>
+<% end %>

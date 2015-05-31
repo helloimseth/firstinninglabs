@@ -68,5 +68,14 @@ class Competitor < ActiveRecord::Base
     self.team.name
   end
 
+  def last_game
+    self.team.game_snapshots.rotate(-1).last
+  end
+
+  def should_include_rps?(id)
+    self.rps && self.rps.include?(id) ||
+    self.last_game.rps && self.last_game.rps.include?(id)
+  end
+
 
 end

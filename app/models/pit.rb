@@ -60,12 +60,20 @@ class Pit < ActiveRecord::Base
     end
   end
 
+  def zips
+    self.statlines.where(source: true)
+  end
+
+  def steamers
+    self.statlines.where(source: false)
+  end
+
   def current_zips
-    self.statlines.where(source: true).last
+    zips.last
   end
 
   def current_steamer
-    self.statlines.where(source: false).last
+    steamers.last
   end
 
   def expected_war_as_sp

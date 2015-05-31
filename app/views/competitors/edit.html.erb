@@ -32,7 +32,7 @@
     <input type="checkbox"
            name="competitor[relievers][]"
            value="<%= pit.id %>"
-           <%= "checked" if @competitor.rps && @competitor.rps.include?(pit.id) %> >
+           <%= "checked" if @competitor.should_include_rps?(pit.id)  %> >
          </label><br>
   <% end %>
 
@@ -54,7 +54,7 @@
       </option>
     </select>
   <% end %>
-  
+
   <input type="submit" value="Submit">
 
 </form>

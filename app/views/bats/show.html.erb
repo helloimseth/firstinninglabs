@@ -1,7 +1,28 @@
 <% statnames = BatStatline.columns.map(&:name).rotate(-2).drop(4) %>
 
-<h1> <%= @bat.name %> </h1>
+<a href="<%= logs_url %>">Logs Index</a>
+
+
+<h1> <%= @bat.name %> - <%= @bat.team.name %></h1>
 <h4>updated on <%= @bat.created_at %> </h4>
+
+<form action="<%= bat_url(@bat) %>" method="post">
+  <%= auth_token %>
+  <input type="hidden" name="_method" value="put">
+
+  <label for="bat-team_id">Change Team
+    <select class="" name="bat[team_id]">
+      <option value="">Select</option>
+      <% @teams.each do |team| %>
+        <option value="<%= team.id %>">
+            <%= team.name %>
+          </option>
+      <% end %>
+    </select>
+  </label>
+
+  <input type="submit" value="Save">
+</form>
 
 <%= render partial: "partials/stat_table",
            locals:{ statnames: statnames,
