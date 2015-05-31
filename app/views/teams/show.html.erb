@@ -31,7 +31,7 @@
                         <% @team.pits.each do |pit| %>
                         <tr>
                           <td>
-                            <%= pit.name  %>
+                            <a href="<%= pit_url(pit) %>"> <%= pit.name  %></a>
                           </td>
                           <% statnames.map(&:to_sym).each do |stat| %>
                             <td>
