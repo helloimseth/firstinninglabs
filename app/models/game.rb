@@ -18,24 +18,26 @@ class Game < ActiveRecord::Base
     !self.send(:underdog).team_expected_win_percentage.nil?
   end
 
-  def neutral_field_win_percentage(this_team, opponent)
-    self.send(this_team).team_expected_win_percentage *
-    (1 - self.send(opponent).team_expected_win_percentage)
+  def neutral_field_win_percentage(team)
+    other_team = team == :favorite ? :underdog : :favorite
+
+    self.send(team).team_expected_win_percentage *
+    (1 - self.send(other_team).team_expected_win_percentage)
   end
 
-  def adjusted_neutral_field_win_percentage(this_team, opponent)
-    sum = neutral_field_win_percentage(this_team, opponent) +
-          neutral_field_win_percentage(opponent, this_team)
+  def adjusted_neutral_field_win_percentage(team)
+    other_team = team == :favorite ? :underdog : :favorite
 
-    neutral_field_win_percentage(this_team, opponent).fdiv(sum)
+    sum = neutral_field_win_percentage(team) + neutral_field_win_percentage(other_team)
+
+    neutral_field_win_percentage(team).fdiv(sum)
   end
 
   def adjusted_win_percentage(team)
-    home_team = self.send(self.home_team)
     other_team = self.home_team == :favorite ? :underdog : :favorite
 
-    if home_team == self.send(team)
-      (1.08 * adjusted_neutral_field_win_percentage(team, other_team)).round(3)
+    if self.send(self.home_team) == self.send(team)
+      (1.08 * adjusted_neutral_field_win_percentage(team)).round(3)
     else
       (1 - adjusted_win_percentage(other_team)).round(3)
     end
@@ -61,24 +63,24 @@ class Game < ActiveRecord::Base
     return 0 if pick == :none
 
     if pick == :favorite
-      factor = ((adjusted_win_percentage(:favorite)*((100/f_odds.abs) + 1) - 1)/(100/f_odds.abs)) * self.log.beginning_balance
+      factor = ((adjusted_win_percentage(:favorite) * ((100.fdiv(f_odds.abs)) + 1) - 1).fdiv((100.fdiv(f_odds.abs)))) * self.log.beginning_balance
     else
-      factor = ((adjusted_win_percentage(:underdog) * ((d_odds/100) + 1) - 1)/(d_odds/100)) * self.log.beginning_balance
+      factor = ((adjusted_win_percentage(:underdog) * ((d_odds.fdiv(100)) + 1) - 1).fdiv((d_odds.fdiv(100)))) * self.log.beginning_balance
     end
 
-    self.log.kelly * factor
+    (self.log.kelly * factor).round(2)
   end
 
   def to_win
-    return 100/f_odds.abs * bet if pick == :favorite
-    d_odds/100 * bet
+    return (100.fdiv(f_odds.abs) * bet).round(2) if pick == :favorite
+    (d_odds.fdiv(100) * bet).round(2)
   end
 
   def expected_value
     loser = self.pick == :favorite ? :underdog : :favorite
 
     (to_win * adjusted_win_percentage(self.pick) +
-    (bet * -1) * adjusted_win_percentage(loser)).round(3)
+    (bet * -1) * adjusted_win_percentage(loser)).round(2)
   end
 
   def result
