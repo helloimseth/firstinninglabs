@@ -4,11 +4,11 @@ class Game < ActiveRecord::Base
   belongs_to :log, class_name: "Log", foreign_key: "log_id", inverse_of: :games
 
   def f_implied_odds
-    self.f_odds.abs.fdiv((self.f_odds.abs + 100)).round(3)
+    self.f_odds.abs.fdiv((self.f_odds.abs + 100)).round(4)
   end
 
   def d_implied_odds
-    100.fdiv((self.d_odds.abs + 100)).round(3)
+    100.fdiv((self.d_odds.abs + 100)).round(4)
   end
 
   def filled_out?
