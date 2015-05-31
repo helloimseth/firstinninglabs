@@ -1,7 +1,7 @@
 <% statnames = Log.columns.map(&:name).rotate(-2).drop(3) %>
 
 <h1>Logs</h1>
-
+<a href="<%= new_log_url  %>">Add Day</a>
 <%= render partial: "partials/stat_table",
            locals:{ statnames: statnames,
                     collection: @logs,

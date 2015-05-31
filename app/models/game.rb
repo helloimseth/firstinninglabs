@@ -12,6 +12,8 @@ class Game < ActiveRecord::Base
   end
 
   def filled_out?
+    !self.send(:favorite).nil? &&
+    !self.send(:underdog).nil? &&
     !self.send(:favorite).team_expected_win_percentage.nil? &&
     !self.send(:underdog).team_expected_win_percentage.nil?
   end

@@ -1,0 +1,28 @@
+<h1>Day Log</h1>
+
+<form action="<%= logs_url %>" method="post">
+  <%= auth_token %>
+
+  <label for="log-day">
+    Day
+    <input type="text" name="log[day]" value="<%= @last_log.day + 1 %>">
+  </label>
+
+  <label for="log-date">
+    Date
+    <input type="date" name="log[date]" value="<%= @last_log.date && @last_log.date + 1 %>">
+  </label>
+
+  <label for="log-cash">
+    Cash
+    <input type="text" name="log[beginning_balance]" value="<%= @last_log.ending_balance %>">
+  </label>
+
+  <label for="log-kelly">
+    Kelly Percentage
+    <input type="text" name="log[kelly]" value="<%= @last_log.kelly %>">
+  </label>
+
+  <input type="submit" value="Add">
+
+</form>
