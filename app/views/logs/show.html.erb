@@ -89,7 +89,7 @@
       </td>
 
       <td>
-        <%= game.f_implied_odds %>
+        <%= game.f_implied_odds.round(4) %>
       </td>
 
       <% team = game.underdog %>
@@ -104,7 +104,7 @@
       </td>
 
       <td>
-        <%= game.d_implied_odds %>
+        <%= game.d_implied_odds.round(4) %>
       </td>
 
       <td>
