@@ -1,5 +1,7 @@
 <% statnames = BatStatline.columns.map(&:name).rotate(-2).drop(4) %>
-
+<a href="<%= teams_url %>">Teams Index</a>
+<br>
+<a href="<%= logs_url %>">Log Index</a>
 <h1> <%= @team.name %> </h1>
 <h4>updated on <%= @team.bats.first.created_at %> </h4>
 
